@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swiggy-clone
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: swiggy-clone
+  template:
+    metadata:
+      labels:
+        app: swiggy-clone
+    spec:
+      containers:
+        - name: swiggy-clone
+          image: santhanamarig/docker-hub-repository-swiggy:latest
+          ports:
+            - containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swiggy-clone-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: swiggy-clone
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
