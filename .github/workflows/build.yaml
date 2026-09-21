@@ -46,7 +46,11 @@ jobs:
         run: docker pull santhanamarig/docker-hub-repository-swiggy:latest
 
       - name: Image Scan
-        run: trivy image santhanamarig/docker-hub-repository-swiggy:latest
+        run: |
+          trivy image --scanners vuln --timeout 15m \
+            --severity HIGH,CRITICAL \
+            santhanamarig/docker-hub-repository-swiggy:latest > trivyimagedeploy.txt
+          cat trivyimagedeploy.txt
 
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --region ap-south-1 --name EKS_CLOUD
