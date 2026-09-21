@@ -16,6 +16,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify Sonar secrets
+        run: |
+          if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then echo "SONAR_TOKEN is empty!"; exit 1; fi
+          if [ -z "${{ secrets.SONAR_HOST_URL }}" ]; then echo "SONAR_HOST_URL is empty!"; exit 1; fi
+          echo "Secrets present"
+          curl -s -u "${{ secrets.SONAR_TOKEN }}:" "${{ secrets.SONAR_HOST_URL }}/api/authentication/validate"
+          echo
+          git --version || echo "WARNING: git not installed on runner"
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
